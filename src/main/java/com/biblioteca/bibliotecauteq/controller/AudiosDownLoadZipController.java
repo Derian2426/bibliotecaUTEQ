@@ -13,24 +13,18 @@ import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/downloadZip")
-public class DercargaAudiosZipController {
+public class AudiosDownLoadZipController {
     @GetMapping("/zip")
     public void download(HttpServletResponse response) throws Exception {
         // Ruta de la carpeta que deseas comprimir
         String folderPath = "C:/Users/HP/Desktop/Audio";
 
-        // Nombre del archivo ZIP resultante
         String zipFileName = "archivos.zip";
 
-        // Crear el objeto ZipOutputStream para escribir en el archivo ZIP
         ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
         response.setContentType("application/force-download");
         response.setHeader("Content-Disposition", "attachment;filename=" + zipFileName);
-
-        // Llamar al método para comprimir la carpeta
         zipFolder(folderPath, folderPath, zipOut);
-
-        // Cerrar el objeto ZipOutputStream
         zipOut.close();
     }
 

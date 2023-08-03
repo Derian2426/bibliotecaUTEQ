@@ -9,7 +9,7 @@ import java.io.*;
 
 @RestController
 @RequestMapping("/download")
-public class DecargarAudioController {
+public class AudioDownLoadController {
     @GetMapping
     public void download(HttpServletResponse response) throws Exception {
         // Dirección del archivo, el entorno real se almacena en la base de datos

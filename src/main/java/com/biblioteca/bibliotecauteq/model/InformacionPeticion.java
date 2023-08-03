@@ -4,13 +4,13 @@ import lombok.Data;
 
 @Data
 public class InformacionPeticion {
-    private int valorError;
-    private String iformacionError;
-    private String estadoError;
+    private int valorEstado;
+    private String iformacionEstado;
+    private String estadoPeticion;
 
-    public InformacionPeticion(int valorError, String iformacionError, String estadoError) {
-        this.valorError = valorError;
-        this.iformacionError = iformacionError;
-        this.estadoError = estadoError;
+    public InformacionPeticion(int valorEstado, String iformacionEstado, String estadoPeticion) {
+        this.valorEstado = valorEstado;
+        this.iformacionEstado = iformacionEstado;
+        this.estadoPeticion = estadoPeticion;
     }
 }
