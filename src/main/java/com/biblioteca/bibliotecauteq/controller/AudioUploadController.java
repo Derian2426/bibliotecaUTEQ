@@ -33,9 +33,9 @@ public class AudioUploadController {
     @Value("${upload.dir}")
     private String uploadDir;
     private Libro libro= new Libro();
-    private AreaConocimiento areaConocimiento = new AreaConocimiento();
-    private SubAreasConocimiento subAreasConocimiento= new SubAreasConocimiento();
-    private SubAreasEspecificas subAreasEspecificas= new SubAreasEspecificas();
+    private final AreaConocimiento areaConocimiento = new AreaConocimiento();
+    private final SubAreasConocimiento subAreasConocimiento= new SubAreasConocimiento();
+    private final SubAreasEspecificas subAreasEspecificas= new SubAreasEspecificas();
     @PostMapping
     public InformacionPeticion uploadAudio(@RequestParam("file") List<MultipartFile> files, @RequestParam("libroRequest") String libro) {
         try {
@@ -51,16 +51,7 @@ public class AudioUploadController {
             Path carpeta = Paths.get(uploadDir+"/"+ libroRequest.getLibro().getNombreLibro());
             if (!crearCarpetaLibro(carpeta))
                 return new InformacionPeticion(-1, "La carpeta ya existe en el servidor", "Carpeta existente");
-            for (MultipartFile file : files) {
-                Path filePath = Path.of(carpeta.toString(), file.getOriginalFilename());
-                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                String contentType = file.getContentType();
-                int indice=posicionArchivo(libroRequest.getCapituloFileList(),file.getOriginalFilename().replace("."+contentType.substring(contentType.lastIndexOf("/") + 1).toLowerCase(), ""));
-                Capitulo capitulo=libroRequest.getCapituloFileList().get(indice);
-                capitulo.setNombreArchivo(file.getOriginalFilename());
-                capitulo.setRutaArchivo(libroRequest.getLibro().getNombreLibro());
-                libroRequest.getCapituloFileList().set(indice,capitulo);
-            }
+            libroRequest=actualizarLibroRequest(files,carpeta, libroRequest);
             this.libro=libroServices.create(libroRequest.getLibro());
             if(this.libro==null)
                 return new InformacionPeticion(-1, "El libro ya se encuentra registrado.", "Error");
@@ -69,6 +60,19 @@ public class AudioUploadController {
         } catch (IOException e) {
             return new InformacionPeticion(-1, "Error al subir los archivos de audio.", "Error");
         }
+    }
+    private LibroRequest actualizarLibroRequest(List<MultipartFile> files,Path carpeta, LibroRequest libroRequest) throws IOException {
+        for (MultipartFile file : files) {
+            Path filePath = Path.of(carpeta.toString(), file.getOriginalFilename());
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            String contentType = file.getContentType();
+            int indice=posicionArchivo(libroRequest.getCapituloFileList(),file.getOriginalFilename().replace("."+contentType.substring(contentType.lastIndexOf("/") + 1).toLowerCase(), ""));
+            Capitulo capitulo=libroRequest.getCapituloFileList().get(indice);
+            capitulo.setNombreArchivo(file.getOriginalFilename());
+            capitulo.setRutaArchivo(libroRequest.getLibro().getNombreLibro());
+            libroRequest.getCapituloFileList().set(indice,capitulo);
+        }
+        return libroRequest;
     }
     private Boolean seleccionarArchivos(List<MultipartFile> files,String extencion) throws IOException {
         boolean verifica=false;
