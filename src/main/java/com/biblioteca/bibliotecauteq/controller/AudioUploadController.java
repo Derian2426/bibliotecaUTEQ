@@ -65,8 +65,9 @@ public class AudioUploadController {
         for (MultipartFile file : files) {
             Path filePath = Path.of(carpeta.toString(), file.getOriginalFilename());
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            String contentType = file.getContentType();
-            int indice=posicionArchivo(libroRequest.getCapituloFileList(),file.getOriginalFilename().replace("."+contentType.substring(contentType.lastIndexOf("/") + 1).toLowerCase(), ""));
+            String ruta=removeExtensionFromFile(file);
+            System.out.println(ruta);
+            int indice=posicionArchivo(libroRequest.getCapituloFileList(),ruta);
             Capitulo capitulo=libroRequest.getCapituloFileList().get(indice);
             capitulo.setNombreArchivo(file.getOriginalFilename());
             capitulo.setRutaArchivo(libroRequest.getLibro().getNombreLibro());
@@ -74,6 +75,25 @@ public class AudioUploadController {
         }
         return libroRequest;
     }
+    public String removeExtensionFromFile(MultipartFile file) {
+        String ruta = file.getOriginalFilename();
+        int lastDotIndex = ruta.lastIndexOf(".");
+
+        if (lastDotIndex != -1) {
+            String contentType = file.getContentType();
+            String extension = contentType.substring(contentType.lastIndexOf("/") + 1).toLowerCase();
+            String nuevaRuta = ruta.substring(0, lastDotIndex);
+
+            if (nuevaRuta.toLowerCase().endsWith("." + extension)) {
+                nuevaRuta = nuevaRuta.substring(0, nuevaRuta.length() - (extension.length() + 1));
+            }
+
+            return nuevaRuta;
+        }
+
+        return ruta;
+    }
+
     private Boolean seleccionarArchivos(List<MultipartFile> files,String extencion,LibroRequest libroRequest) throws IOException {
         boolean verifica=false;
         Path carpeta = Paths.get(uploadDir+"/"+ extencion);
