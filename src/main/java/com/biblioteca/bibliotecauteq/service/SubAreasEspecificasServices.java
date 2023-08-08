@@ -1,7 +1,6 @@
 package com.biblioteca.bibliotecauteq.service;
 
 import com.biblioteca.bibliotecauteq.interfaces.ISubAreasEspecificas;
-import com.biblioteca.bibliotecauteq.model.SubAreasConocimiento;
 import com.biblioteca.bibliotecauteq.model.SubAreasEspecificas;
 import com.biblioteca.bibliotecauteq.repository.SubAreasEspecificasRepository;
 import jakarta.transaction.Transactional;

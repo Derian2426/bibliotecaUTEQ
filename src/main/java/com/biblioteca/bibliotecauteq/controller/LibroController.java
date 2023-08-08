@@ -1,8 +1,6 @@
 package com.biblioteca.bibliotecauteq.controller;
 
-import com.biblioteca.bibliotecauteq.model.Capitulo;
 import com.biblioteca.bibliotecauteq.model.Libro;
-import com.biblioteca.bibliotecauteq.model.SubAreasConocimiento;
 import com.biblioteca.bibliotecauteq.service.LibroServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

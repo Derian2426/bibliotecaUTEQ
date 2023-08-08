@@ -23,6 +23,6 @@ public class Usuario {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "fechaNacimiento", nullable = false)
     private Date fechaNacimiento;
-    @Column(name = "password", nullable = false,length = 50)
+    @Column(name = "password", nullable = false,length = 200)
     private String password;
 }

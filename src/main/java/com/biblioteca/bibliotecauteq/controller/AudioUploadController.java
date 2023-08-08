@@ -42,9 +42,9 @@ public class AudioUploadController {
             LibroRequest libroRequest = mapearLibro(libro);
             if(libroServices.busquedaLibro(libroRequest.getLibro().getNombreLibro()))
                 return new InformacionPeticion(-1, "El libro ya se encuentra registrado.", "Error");
-            if(!seleccionarArchivos(files,"pdf"))
+            if(!seleccionarArchivos(files,"pdf",libroRequest))
                 return new InformacionPeticion(-1, "No se encuentra el PDF del libro.", "Error");
-            if(!seleccionarArchivos(files,"jpg")&&!seleccionarArchivos(files,"png"))
+            if(!seleccionarArchivos(files,"jpg",libroRequest)&&!seleccionarArchivos(files,"png",libroRequest))
                 return new InformacionPeticion(-1, "No se encuentra la portada del libro.", "Error");
             if (!verificarTipoArchivo(files))
                 return new InformacionPeticion(-1, "Solo se permiten archivos con extensión .mp3", "Archivo incorrecto");
@@ -74,7 +74,7 @@ public class AudioUploadController {
         }
         return libroRequest;
     }
-    private Boolean seleccionarArchivos(List<MultipartFile> files,String extencion) throws IOException {
+    private Boolean seleccionarArchivos(List<MultipartFile> files,String extencion,LibroRequest libroRequest) throws IOException {
         boolean verifica=false;
         Path carpeta = Paths.get(uploadDir+"/"+ extencion);
         crearCarpetaLibro(carpeta);
@@ -83,6 +83,7 @@ public class AudioUploadController {
                 Path filePath = Path.of(carpeta.toString(), file.getOriginalFilename());
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
                 files.remove(file);
+                libroRequest.getLibro().setCoverImage(file.getOriginalFilename());
                 verifica= true;
                 break;
             }
