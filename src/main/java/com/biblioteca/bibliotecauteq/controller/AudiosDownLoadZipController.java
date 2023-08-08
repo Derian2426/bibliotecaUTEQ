@@ -1,9 +1,8 @@
 package com.biblioteca.bibliotecauteq.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,45 +12,39 @@ import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/downloadZip")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AudiosDownLoadZipController {
-    @GetMapping("/zip")
-    public void download(HttpServletResponse response) throws Exception {
-        // Ruta de la carpeta que deseas comprimir
-        String folderPath = "C:/Users/HP/Desktop/Audio";
 
-        String zipFileName = "archivos.zip";
+    @Value("${upload.dir}")
+    private String uploadDir;
 
+    @PostMapping
+    public void download(HttpServletResponse response, @RequestParam("ruta") String rutaArchivo) throws Exception {
+        String zipFileName = rutaArchivo + ".zip";
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + zipFileName + "\"");
         ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
-        response.setContentType("application/force-download");
-        response.setHeader("Content-Disposition", "attachment;filename=" + zipFileName);
-        zipFolder(folderPath, folderPath, zipOut);
+        zipFolder(uploadDir + "/" + rutaArchivo, zipOut);
         zipOut.close();
     }
 
-    private void zipFolder(String folderPath, String baseFolderPath, ZipOutputStream zipOut) throws IOException {
+    private void zipFolder(String folderPath, ZipOutputStream zipOut) throws IOException {
         File folder = new File(folderPath);
         File[] files = folder.listFiles();
-
-        // Recorrer todos los archivos y subcarpetas en la carpeta actual
+        byte[] buffer = new byte[1024];
         for (File file : files) {
             if (file.isFile()) {
-                // Si es un archivo, agregarlo al archivo ZIP
-                String relativePath = file.getAbsolutePath().substring(baseFolderPath.length() + 1);
-                ZipEntry zipEntry = new ZipEntry(relativePath);
+                ZipEntry zipEntry = new ZipEntry(file.getName());
                 zipOut.putNextEntry(zipEntry);
-
                 FileInputStream fis = new FileInputStream(file);
-                byte[] buffer = new byte[1024];
                 int length;
                 while ((length = fis.read(buffer)) >= 0) {
                     zipOut.write(buffer, 0, length);
                 }
-
                 fis.close();
                 zipOut.closeEntry();
             } else if (file.isDirectory()) {
-                // Si es una subcarpeta, llamar recursivamente al método zipFolder
-                zipFolder(file.getAbsolutePath(), baseFolderPath, zipOut);
+                zipFolder(file.getAbsolutePath(), zipOut);
             }
         }
     }

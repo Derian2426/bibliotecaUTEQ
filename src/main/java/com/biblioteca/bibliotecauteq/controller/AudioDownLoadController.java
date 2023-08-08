@@ -1,35 +1,42 @@
 package com.biblioteca.bibliotecauteq.controller;
 
+import com.biblioteca.bibliotecauteq.model.AreaConocimiento;
+import com.biblioteca.bibliotecauteq.model.Capitulo;
+import com.biblioteca.bibliotecauteq.model.CapituloLibro;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
+import java.nio.file.Files;
 
 @RestController
 @RequestMapping("/download")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AudioDownLoadController {
-    @GetMapping
-    public void download(HttpServletResponse response) throws Exception {
-        // Dirección del archivo, el entorno real se almacena en la base de datos
-        String uploadDir = "C:/Users/HP/Desktop/Audio/Office 2016 - 64 bits.rar";
-        File file = new File(uploadDir);
-        // Llevando objeto de entrada
-        FileInputStream fis = new FileInputStream(file);
-        // Establecer el formato relevante
-        response.setContentType("application/force-download");
-        // Establecer el nombre y el encabezado del archivo descargado
-        response.addHeader("Content-disposition", "attachment;fileName=" + "Office 2016 - 64 bits.rar");
-        // Crear objeto de salida
-        OutputStream os = response.getOutputStream();
-        // operación normal
-        byte[] buf = new byte[1024];
-        int len = 0;
-        while((len = fis.read(buf)) != -1) {
-            os.write(buf, 0, len);
+    @Value("${upload.dir}")
+    private String uploadDir;
+    @PostMapping
+    public ResponseEntity<byte[]> download(@RequestParam("ruta") String rutaArchivo, @RequestParam("file") String nombreArchivo) {
+        try {
+            File file = new File(uploadDir + "/" + rutaArchivo + "/" + nombreArchivo);
+            if (file.exists()) {
+                byte[] fileBytes = Files.readAllBytes(file.toPath());
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+                headers.setContentLength(fileBytes.length);
+                headers.setContentDispositionFormData("attachment", nombreArchivo);
+                return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        fis.close();
     }
 
 }
