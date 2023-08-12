@@ -20,13 +20,13 @@ public class AreaConocimientoController {
     public ResponseEntity<AreaConocimiento> createAreaConocimiento(@RequestBody AreaConocimiento areaConocimiento){
         if (areaConocimiento!=null){
             conocimientoRespuesta=areaConocimientoServices.create(areaConocimiento);
-            if (conocimientoRespuesta!=areaConocimiento)
+            if (conocimientoRespuesta.getIdArea()!=null)
                 return new ResponseEntity<>(conocimientoRespuesta, HttpStatus.OK);
             else
-                return new ResponseEntity<>(new AreaConocimiento(), HttpStatus.CONFLICT);
+                return new ResponseEntity<>(new AreaConocimiento(-1L,areaConocimiento.getNombreArea()), HttpStatus.OK);
         }
         else
-            return new ResponseEntity<>(new AreaConocimiento(), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(new AreaConocimiento(-1L,areaConocimiento.getNombreArea()), HttpStatus.CONFLICT);
     }
     @GetMapping
     public ResponseEntity<List<AreaConocimiento>> listaAreaConocimiento(){

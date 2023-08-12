@@ -17,12 +17,20 @@ public class AutorServices implements IAutor {
     private AutorRepository autorRepository;
     @Override
     public Autor create(Autor autor) {
-        if(buscarAutor(autor)==null)
-            return autorRepository.save(autor);
-        return new Autor();
+        if(buscarAutor(autor)&&buscarApellido(autor))
+            return new Autor();
+        return autorRepository.save(autor);
     }
-    public Autor buscarAutor(Autor autor) {
+    public boolean buscarAutor(Autor autor) {
+        List<Autor> lista= autorRepository.findByNombre(autor.getNombre());
+        return lista.size()>0;
+    }
+    public List<Autor> buscarListaAutor(Autor autor) {
         return autorRepository.findByNombre(autor.getNombre());
+    }
+    public boolean buscarApellido(Autor autor) {
+        List<Autor> lista=autorRepository.findByApellido(autor.getApellido());
+        return lista.size()>0;
     }
     @Override
     public Autor update(Autor autor) {

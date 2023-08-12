@@ -1,13 +1,17 @@
 package com.biblioteca.bibliotecauteq.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "SubAreasEspecificas")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SubAreasEspecificas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

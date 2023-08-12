@@ -1,11 +1,15 @@
 package com.biblioteca.bibliotecauteq.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "AreaConocimiento")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AreaConocimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

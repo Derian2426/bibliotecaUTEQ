@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tipoAutor")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TipoAutorController {
     @Autowired
     private TipoAutorServices tipoAutorServices;
@@ -23,10 +24,10 @@ public class TipoAutorController {
     @PostMapping
     public ResponseEntity<TipoAutor> createTipoAutor(@RequestBody TipoAutor tipoAutor){
         TipoAutor autor=tipoAutorServices.create(tipoAutor);
-        if (autor!=null)
-            return new ResponseEntity<>(autor, HttpStatus.CREATED);
+        if (autor.getIdAutor()==null)
+            return new ResponseEntity<>(new TipoAutor(-1, tipoAutor.getTipoAutor()), HttpStatus.OK);
         else
-            return new ResponseEntity<>(new TipoAutor(), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(autor, HttpStatus.OK);
     }
     @PutMapping
     public  ResponseEntity<TipoAutor> updateTipoAutor(@RequestBody TipoAutor tipoAutor){

@@ -18,15 +18,15 @@ public class SubAreasEspecificasServices implements ISubAreasEspecificas {
     @Transactional
     public SubAreasEspecificas create(SubAreasEspecificas subAreasEspecificas) {
         Optional<SubAreasEspecificas> existingArea = subAreasEspecificasRepository.findByNombreSubAreaEspecifica(subAreasEspecificas.getNombreSubAreaEspecifica());
-       // if (existingArea.isPresent()) {
-         //   return existingArea.get();
-        //} else {
+        if (existingArea.isPresent()) {
+            return new SubAreasEspecificas();
+        } else {
             try {
                 return subAreasEspecificasRepository.save(subAreasEspecificas);
             } catch (Exception e) {
                 return new SubAreasEspecificas();
             }
-        //}
+        }
     }
 
     @Override

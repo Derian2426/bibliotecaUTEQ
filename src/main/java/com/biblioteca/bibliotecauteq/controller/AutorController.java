@@ -8,10 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/autor")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AutorController {
     @Autowired
     private AutorServices autorServices;
@@ -22,10 +24,10 @@ public class AutorController {
     @PostMapping
     public ResponseEntity<Autor> createAutor(@RequestBody Autor autor){
         Autor autorVerificacion=autorServices.create(autor);
-        if (autorVerificacion!=null)
-            return new ResponseEntity<>(autorVerificacion, HttpStatus.CREATED);
+        if (autorVerificacion.getIdAutor()==null)
+            return new ResponseEntity<>(new Autor(-1,autor.getNombre(), autor.getApellido()), HttpStatus.OK);
         else
-            return new ResponseEntity<>(new Autor(), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(autorVerificacion, HttpStatus.OK);
     }
     @PutMapping
     public  ResponseEntity<Autor> updateAutor(@RequestBody Autor autor){
@@ -47,11 +49,11 @@ public class AutorController {
         return new ResponseEntity<>(autor,HttpStatus.OK);
     }
     @PostMapping("/busquedaTipoAutor")
-    public  ResponseEntity<Autor> busquedaAutor(@RequestBody Autor tipoAutor){
-        Autor autor=autorServices.buscarAutor(tipoAutor);
-        if(autor==null)
-            return new ResponseEntity<>(new Autor(), HttpStatus.NOT_FOUND);
+    public  ResponseEntity<List<Autor>> busquedaAutor(@RequestBody Autor tipoAutor){
+        List<Autor> listaAutor=autorServices.buscarListaAutor(tipoAutor);
+        if(listaAutor.size()<1)
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
         else
-            return new ResponseEntity<>(autor, HttpStatus.OK);
+            return new ResponseEntity<>(listaAutor, HttpStatus.OK);
     }
 }

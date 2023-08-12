@@ -1,9 +1,6 @@
 package com.biblioteca.bibliotecauteq.controller;
 
-import com.biblioteca.bibliotecauteq.model.AreaConocimiento;
-import com.biblioteca.bibliotecauteq.model.Capitulo;
-import com.biblioteca.bibliotecauteq.model.CapituloLibro;
-import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

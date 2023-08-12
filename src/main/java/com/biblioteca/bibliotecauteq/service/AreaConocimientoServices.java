@@ -17,15 +17,15 @@ public class AreaConocimientoServices implements IAreaConocimiento {
     @Override
     public AreaConocimiento create(AreaConocimiento areaConocimiento) {
         Optional<AreaConocimiento> existingArea = areaConocimientoRepository.findByNombreArea(areaConocimiento.getNombreArea());
-        //if (existingArea.isPresent()) {
-          //  return existingArea.get();
-        //} else {
+        if (existingArea.isPresent()) {
+          return new AreaConocimiento();
+        } else {
             try {
                 return areaConocimientoRepository.save(areaConocimiento);
             } catch (Exception e) {
                 return new AreaConocimiento();
             }
-        //}
+        }
     }
     @Override
     public AreaConocimiento update(AreaConocimiento areaConocimiento) {
