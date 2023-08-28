@@ -9,4 +9,5 @@ import java.util.List;
 public class LibroRequest implements Serializable {
     private Libro libro;
     private List<Capitulo> capituloFileList;
+    private List<AutorLibro> listTipoAutor;
 }

@@ -7,6 +7,7 @@ import com.biblioteca.bibliotecauteq.repository.CapituloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,11 @@ public class CapituloService implements ICapitulo {
         return null;
     }
     public List<Capitulo> createList(List<Capitulo> capitulos) {
-        return capituloRepository.saveAll(capitulos);
+        try {
+            return capituloRepository.saveAll(capitulos);
+        }catch (Exception e){
+            return new ArrayList<>();
+        }
     }
 
     @Override

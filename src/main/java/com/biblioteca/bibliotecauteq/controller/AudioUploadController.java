@@ -30,6 +30,8 @@ public class AudioUploadController {
     private SubAreasEspecificasServices subAreasEspecificasServices;
     @Autowired
     private CapituloService capituloService;
+    @Autowired
+    private AutorLibroServices autorLibroServices;
     @Value("${upload.dir}")
     private String uploadDir;
     private Libro libro= new Libro();
@@ -48,14 +50,17 @@ public class AudioUploadController {
                 return new InformacionPeticion(-1, "No se encuentra la portada del libro.", "Error");
             if (!verificarTipoArchivo(files))
                 return new InformacionPeticion(-1, "Solo se permiten archivos con extensión .mp3", "Archivo incorrecto");
-            Path carpeta = Paths.get(uploadDir+"/"+ libroRequest.getLibro().getNombreLibro());
+            Path carpeta = Paths.get(uploadDir+"/"+ libroRequest.getLibro().getNombreLibro().trim());
             if (!crearCarpetaLibro(carpeta))
                 return new InformacionPeticion(-1, "La carpeta ya existe en el servidor", "Carpeta existente");
-            libroRequest=actualizarLibroRequest(files,carpeta, libroRequest);
+            actualizarLibroRequest(files,carpeta, libroRequest);
             this.libro=libroServices.create(libroRequest.getLibro());
             if(this.libro==null)
                 return new InformacionPeticion(-1, "El libro ya se encuentra registrado.", "Error");
+
+            //realizar validaciones
             capituloService.createList(capitulosLibro(libroRequest.getCapituloFileList(),this.libro));
+            autorLibroServices.createList(autoresLibro(libroRequest.getListTipoAutor(),this.libro));
             return new InformacionPeticion(1, "Archivos de audio subidos con éxito.", "Éxito");
         } catch (IOException e) {
             return new InformacionPeticion(-1, "Error al subir los archivos de audio.", "Error");
@@ -66,7 +71,6 @@ public class AudioUploadController {
             Path filePath = Path.of(carpeta.toString(), file.getOriginalFilename());
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             String ruta=removeExtensionFromFile(file);
-            System.out.println(ruta);
             int indice=posicionArchivo(libroRequest.getCapituloFileList(),ruta);
             Capitulo capitulo=libroRequest.getCapituloFileList().get(indice);
             capitulo.setNombreArchivo(file.getOriginalFilename());
@@ -116,6 +120,13 @@ public class AudioUploadController {
             capitulo.setLibro(libro);
         }
         return listaCapitulos;
+    }
+    private List<AutorLibro> autoresLibro(List<AutorLibro>listaAutores,Libro libro){
+        for (int i = 0; i < listaAutores.size(); i++) {
+            AutorLibro autorLibro = listaAutores.get(i);
+            autorLibro.setLibro(libro);
+        }
+        return listaAutores;
     }
     private int posicionArchivo(List<Capitulo>listaCapitulos,String elementoCapitulo){
         int posicion=-1;

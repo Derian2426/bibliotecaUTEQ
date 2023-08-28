@@ -22,6 +22,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @AllArgsConstructor
 public class WeSecurityConfig {
@@ -32,8 +34,18 @@ public class WeSecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers(HttpMethod.POST,"/usuarios").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/login").permitAll()
+                        auth.requestMatchers(HttpMethod.POST,"/login").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/libro/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/libro").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/autoresLibro").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/capitulo").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/downloadZip").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/download").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/files").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/files/portada").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/usuarios").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/libro/autorizacion").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/login/validate").permitAll()
                                 .anyRequest().permitAll()
 
                 );
@@ -59,12 +71,14 @@ public class WeSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*");
+        configuration.addAllowedOrigin(Arrays.asList("http://localhost:3000").toString());
+        configuration.addAllowedOriginPattern("/libro/autorizacion");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 
 }

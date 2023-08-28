@@ -28,6 +28,18 @@ public class AreaConocimientoController {
         else
             return new ResponseEntity<>(new AreaConocimiento(-1L,areaConocimiento.getNombreArea()), HttpStatus.CONFLICT);
     }
+    @PostMapping("/editar")
+    public ResponseEntity<AreaConocimiento> updateAreaConocimiento(@RequestBody AreaConocimiento areaConocimiento){
+        if (areaConocimiento!=null){
+            conocimientoRespuesta=areaConocimientoServices.update(areaConocimiento);
+            if (conocimientoRespuesta.getIdArea()!=null)
+                return new ResponseEntity<>(conocimientoRespuesta, HttpStatus.OK);
+            else
+                return new ResponseEntity<>(new AreaConocimiento(-1L,areaConocimiento.getNombreArea()), HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>(new AreaConocimiento(-1L,areaConocimiento.getNombreArea()), HttpStatus.CONFLICT);
+    }
     @GetMapping
     public ResponseEntity<List<AreaConocimiento>> listaAreaConocimiento(){
         return new ResponseEntity<>(areaConocimientoServices.findAll(), HttpStatus.OK);

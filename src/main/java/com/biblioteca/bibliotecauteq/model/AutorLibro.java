@@ -1,5 +1,6 @@
 package com.biblioteca.bibliotecauteq.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class AutorLibro {
 
     @ManyToOne
     @JoinColumn(name = "idLibro")
+    @JsonIgnore
     private Libro libro;
     @ManyToOne
     @JoinColumn(name = "idAutorTipo")
