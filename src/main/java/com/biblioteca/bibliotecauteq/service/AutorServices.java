@@ -2,9 +2,7 @@ package com.biblioteca.bibliotecauteq.service;
 
 import com.biblioteca.bibliotecauteq.interfaces.IAutor;
 import com.biblioteca.bibliotecauteq.model.Autor;
-import com.biblioteca.bibliotecauteq.model.TipoAutor;
 import com.biblioteca.bibliotecauteq.repository.AutorRepository;
-import com.biblioteca.bibliotecauteq.repository.TipoAutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

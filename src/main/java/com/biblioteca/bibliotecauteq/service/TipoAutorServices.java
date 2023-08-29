@@ -2,7 +2,6 @@ package com.biblioteca.bibliotecauteq.service;
 
 import com.biblioteca.bibliotecauteq.interfaces.ITipoAutor;
 import com.biblioteca.bibliotecauteq.model.TipoAutor;
-import com.biblioteca.bibliotecauteq.model.Usuario;
 import com.biblioteca.bibliotecauteq.repository.TipoAutorRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

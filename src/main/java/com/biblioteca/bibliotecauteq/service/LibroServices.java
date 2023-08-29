@@ -6,6 +6,7 @@ import com.biblioteca.bibliotecauteq.repository.LibroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,14 +14,15 @@ import java.util.Optional;
 public class LibroServices implements ILibro {
     @Autowired
     private LibroRepository libroRepository;
+
     @Override
     public Libro create(Libro libro) {
         try {
-            Libro busquedaLibro=libroRepository.findByNombreLibro(libro.getNombreLibro());
-            if(busquedaLibro!=null)
+            Libro busquedaLibro = libroRepository.findByNombreLibro(libro.getNombreLibro());
+            if (busquedaLibro != null)
                 return new Libro();
             return libroRepository.save(libro);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new Libro();
         }
     }
@@ -37,15 +39,20 @@ public class LibroServices implements ILibro {
 
     @Override
     public List<Libro> findAll() {
-        return libroRepository.findAll();
+        try {
+            return libroRepository.findAll();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
 
     @Override
     public void delete(Integer idLibro) {
 
     }
-    public Boolean busquedaLibro(String nombreLibro){
-        Libro busquedaLibro=libroRepository.findByNombreLibro(nombreLibro);
+
+    public Boolean busquedaLibro(String nombreLibro) {
+        Libro busquedaLibro = libroRepository.findByNombreLibro(nombreLibro);
         return busquedaLibro != null;
     }
 }

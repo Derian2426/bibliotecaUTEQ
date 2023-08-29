@@ -1,7 +1,6 @@
 package com.biblioteca.bibliotecauteq.controller;
 import com.biblioteca.bibliotecauteq.model.Capitulo;
 import com.biblioteca.bibliotecauteq.model.Libro;
-import com.biblioteca.bibliotecauteq.model.LibroRequest;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,7 +1,6 @@
 package com.biblioteca.bibliotecauteq.controller;
 
 import com.biblioteca.bibliotecauteq.model.AutorLibro;
-import com.biblioteca.bibliotecauteq.model.Capitulo;
 import com.biblioteca.bibliotecauteq.model.Libro;
 import com.biblioteca.bibliotecauteq.service.AutorLibroServices;
 import org.springframework.beans.factory.annotation.Autowired;
