@@ -17,43 +17,66 @@ import java.util.List;
 public class AutorController {
     @Autowired
     private AutorServices autorServices;
+
     @GetMapping
-    public ResponseEntity<List<Autor>> listaAutor(){
+    public ResponseEntity<List<Autor>> listaAutor() {
         return new ResponseEntity<>(autorServices.findAll(), HttpStatus.OK);
     }
+
     @PostMapping
-    public ResponseEntity<Autor> createAutor(@RequestBody Autor autor){
-        Autor autorVerificacion=autorServices.create(autor);
-        if (autorVerificacion.getIdAutor()==null)
-            return new ResponseEntity<>(new Autor(-1,autor.getNombre(), autor.getApellido()), HttpStatus.OK);
-        else
-            return new ResponseEntity<>(autorVerificacion, HttpStatus.OK);
+    public ResponseEntity<Autor> createAutor(@RequestBody Autor autor) {
+        try {
+            if (autor != null) {
+                Autor autorVerificacion = autorServices.create(autor);
+                if (autorVerificacion.getIdAutor() == null)
+                    return new ResponseEntity<>(new Autor(-1, autor.getNombre(), autor.getApellido()), HttpStatus.CONFLICT);
+                else
+                    return new ResponseEntity<>(autorVerificacion, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>(new Autor(), HttpStatus.CONFLICT);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(new Autor(), HttpStatus.CONFLICT);
+        }
     }
+
     @PutMapping
-    public  ResponseEntity<Autor> updateAutor(@RequestBody Autor autor){
+    public ResponseEntity<Autor> updateAutor(@RequestBody Autor autor) {
         return new ResponseEntity<>(autorServices.update(autor), HttpStatus.OK);
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Autor> finById(@PathVariable("id") Integer idAutor){
-        Autor autor= autorServices.findById(idAutor);
-        if (autor==null)
+    public ResponseEntity<Autor> finById(@PathVariable("id") Integer idAutor) {
+        Autor autor = autorServices.findById(idAutor);
+        if (autor == null)
             return new ResponseEntity<>(new Autor(), HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(autor,HttpStatus.OK);
+        return new ResponseEntity<>(autor, HttpStatus.OK);
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteAutor(@PathVariable("id") Integer idTipoAutor) throws Exception {
-        Autor autor= autorServices.findById(idTipoAutor);
-        if (autor==null)
-            return new ResponseEntity<>(new Usuario(), HttpStatus.NOT_FOUND);
-        autorServices.delete(idTipoAutor);
-        return new ResponseEntity<>(autor,HttpStatus.OK);
+    public ResponseEntity<Object> deleteAutor(@PathVariable("id") Integer idTipoAutor) {
+        try {
+            Autor autor = autorServices.findById(idTipoAutor);
+            if (autor == null)
+                return new ResponseEntity<>(new Usuario(), HttpStatus.CONFLICT);
+            autorServices.delete(idTipoAutor);
+            return new ResponseEntity<>(autor, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new Usuario(), HttpStatus.CONFLICT);
+        }
     }
+
     @PostMapping("/busquedaTipoAutor")
-    public  ResponseEntity<List<Autor>> busquedaAutor(@RequestBody Autor tipoAutor){
-        List<Autor> listaAutor=autorServices.buscarListaAutor(tipoAutor);
-        if(listaAutor.size()<1)
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
-        else
-            return new ResponseEntity<>(listaAutor, HttpStatus.OK);
+    public ResponseEntity<List<Autor>> busquedaAutor(@RequestBody Autor tipoAutor) {
+        try {
+            List<Autor> listaAutor = autorServices.buscarListaAutor(tipoAutor);
+            if (listaAutor.size() > 0)
+                return new ResponseEntity<>(listaAutor, HttpStatus.OK);
+            else
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.CONFLICT);
+        }
+
     }
 }

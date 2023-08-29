@@ -8,6 +8,7 @@ import com.biblioteca.bibliotecauteq.repository.TipoAutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,23 +16,38 @@ import java.util.Optional;
 public class AutorServices implements IAutor {
     @Autowired
     private AutorRepository autorRepository;
+
     @Override
     public Autor create(Autor autor) {
-        if(buscarAutor(autor)&&buscarApellido(autor))
+        try {
+            if (buscarAutor(autor) && buscarApellido(autor))
+                return new Autor();
+            return autorRepository.save(autor);
+        } catch (Exception e) {
             return new Autor();
-        return autorRepository.save(autor);
+        }
     }
-    public boolean buscarAutor(Autor autor) {
-        List<Autor> lista= autorRepository.findByNombre(autor.getNombre());
-        return lista.size()>0;
+
+    private boolean buscarAutor(Autor autor) {
+        List<Autor> lista = autorRepository.findByNombre(autor.getNombre());
+        return lista.size() > 0;
     }
+
     public List<Autor> buscarListaAutor(Autor autor) {
-        return autorRepository.findByNombre(autor.getNombre());
+        try {
+            if (autor != null)
+                return autorRepository.findByNombre(autor.getNombre());
+            return new ArrayList<>();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
-    public boolean buscarApellido(Autor autor) {
-        List<Autor> lista=autorRepository.findByApellido(autor.getApellido());
-        return lista.size()>0;
+
+    private boolean buscarApellido(Autor autor) {
+        List<Autor> lista = autorRepository.findByApellido(autor.getApellido());
+        return lista.size() > 0;
     }
+
     @Override
     public Autor update(Autor autor) {
         return autorRepository.save(autor);
@@ -39,13 +55,21 @@ public class AutorServices implements IAutor {
 
     @Override
     public Autor findById(Integer idAutor) {
-        Optional<Autor> autor=autorRepository.findById(idAutor);
-        return autor.orElse(null);
+        try {
+            Optional<Autor> autor = autorRepository.findById(idAutor);
+            return autor.orElse(null);
+        } catch (Exception e) {
+            return new Autor();
+        }
     }
 
     @Override
     public List<Autor> findAll() {
-        return autorRepository.findAll();
+        try {
+            return autorRepository.findAll();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
 
     @Override

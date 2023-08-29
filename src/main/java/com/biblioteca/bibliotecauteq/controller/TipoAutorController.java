@@ -30,11 +30,14 @@ public class TipoAutorController {
     @PostMapping
     public ResponseEntity<TipoAutor> createTipoAutor(@RequestBody TipoAutor tipoAutor) {
         try {
-            TipoAutor autor = tipoAutorServices.create(tipoAutor);
-            if (autor.getIdAutor() == null)
-                return new ResponseEntity<>(new TipoAutor(-1, tipoAutor.getTipoAutor()), HttpStatus.CONFLICT);
-            else
-                return new ResponseEntity<>(autor, HttpStatus.OK);
+            if (tipoAutor != null) {
+                TipoAutor autor = tipoAutorServices.create(tipoAutor);
+                if (autor.getIdAutor() == null)
+                    return new ResponseEntity<>(new TipoAutor(-1, tipoAutor.getTipoAutor()), HttpStatus.CONFLICT);
+                else
+                    return new ResponseEntity<>(autor, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>(new TipoAutor(), HttpStatus.CONFLICT);
         } catch (Exception e) {
             return new ResponseEntity<>(new TipoAutor(), HttpStatus.CONFLICT);
         }
@@ -69,11 +72,15 @@ public class TipoAutorController {
     @PostMapping("/busquedaTipoAutor")
     public ResponseEntity<TipoAutor> busquedaTipoAutor(@RequestBody TipoAutor tipoAutor) {
         try {
-            TipoAutor autor = tipoAutorServices.buscarTipoAutor(tipoAutor);
-            if (autor == null)
+            if (tipoAutor != null) {
+                TipoAutor autor = tipoAutorServices.buscarTipoAutor(tipoAutor);
+                if (autor == null)
+                    return new ResponseEntity<>(new TipoAutor(), HttpStatus.CONFLICT);
+                else
+                    return new ResponseEntity<>(autor, HttpStatus.OK);
+            } else
                 return new ResponseEntity<>(new TipoAutor(), HttpStatus.CONFLICT);
-            else
-                return new ResponseEntity<>(autor, HttpStatus.OK);
+
         } catch (Exception e) {
             return new ResponseEntity<>(new TipoAutor(), HttpStatus.CONFLICT);
         }
