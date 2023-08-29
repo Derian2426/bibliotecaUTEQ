@@ -1,7 +1,6 @@
 package com.biblioteca.bibliotecauteq.service;
 
 import com.biblioteca.bibliotecauteq.interfaces.ISubAreasConocimiento;
-import com.biblioteca.bibliotecauteq.model.AreaConocimiento;
 import com.biblioteca.bibliotecauteq.model.SubAreasConocimiento;
 import com.biblioteca.bibliotecauteq.repository.SubAreaConocimientoRepository;
 import jakarta.transaction.Transactional;
@@ -55,7 +54,6 @@ public class SubAreaConocimientoService implements ISubAreasConocimiento {
     public List<SubAreasConocimiento> findAll() {
         try {
             return subAreaConocimientoRepository.findAll();
-
         } catch (Exception e) {
             return new ArrayList<>();
         }
