@@ -28,7 +28,7 @@ public class AreaConocimientoController {
                 else
                     return new ResponseEntity<>(new AreaConocimiento(-1L, areaConocimiento.getNombreArea()), HttpStatus.OK);
             } else
-                return new ResponseEntity<>(new AreaConocimiento(-1L, "Los datos enviados se encuentran inconpletos"), HttpStatus.CONFLICT);
+                return new ResponseEntity<>(new AreaConocimiento(-1L, "Los datos enviados se encuentran inconpletos."), HttpStatus.CONFLICT);
         } catch (Exception e) {
             return new ResponseEntity<>(new AreaConocimiento(-1L, "Ocurrio un error vuelva a intentarlo luego."), HttpStatus.CONFLICT);
         }

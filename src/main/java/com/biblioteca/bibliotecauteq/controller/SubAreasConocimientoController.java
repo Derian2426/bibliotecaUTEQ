@@ -18,27 +18,26 @@ import java.util.Optional;
 public class SubAreasConocimientoController {
     @Autowired
     private SubAreaConocimientoService subAreaConocimientoService;
-    private SubAreasConocimiento conocimientoRespuesta;
+
     @GetMapping("/{id}")
-    public List<SubAreasConocimiento> finById(@PathVariable("id") Integer idbArea){
-       List<SubAreasConocimiento> subAreasConocimiento= subAreaConocimientoService.findById(idbArea);
-        return subAreasConocimiento;
+    public ResponseEntity<List<SubAreasConocimiento>> finById(@PathVariable("id") Integer idbArea) {
+        return new ResponseEntity<>(subAreaConocimientoService.findById(idbArea), HttpStatus.OK);
     }
+
     @GetMapping
-    public List<SubAreasConocimiento> finAll(){
-        List<SubAreasConocimiento> subAreasConocimiento= subAreaConocimientoService.findAll();
-        return subAreasConocimiento;
+    public ResponseEntity<List<SubAreasConocimiento>> finAll() {
+        return new ResponseEntity<>(subAreaConocimientoService.findAll(), HttpStatus.OK);
     }
+
     @PostMapping
-    public ResponseEntity<SubAreasConocimiento> createSubAreasConocimiento(@RequestBody SubAreasConocimiento subAreasConocimiento){
-        if (subAreasConocimiento!=null){
-            conocimientoRespuesta=subAreaConocimientoService.create(subAreasConocimiento);
-            if (conocimientoRespuesta.getIdSubArea()!=null)
+    public ResponseEntity<SubAreasConocimiento> createSubAreasConocimiento(@RequestBody SubAreasConocimiento subAreasConocimiento) {
+        if (subAreasConocimiento != null) {
+            SubAreasConocimiento conocimientoRespuesta = subAreaConocimientoService.create(subAreasConocimiento);
+            if (conocimientoRespuesta.getIdSubArea() != null)
                 return new ResponseEntity<>(conocimientoRespuesta, HttpStatus.OK);
             else
-                return new ResponseEntity<>(new SubAreasConocimiento(-1L,subAreasConocimiento.getNombreSubArea(),new AreaConocimiento()), HttpStatus.OK);
-        }
-        else
-            return new ResponseEntity<>(new SubAreasConocimiento(-1L,subAreasConocimiento.getNombreSubArea(),new AreaConocimiento()), HttpStatus.CONFLICT);
+                return new ResponseEntity<>(new SubAreasConocimiento(-1L, subAreasConocimiento.getNombreSubArea(), new AreaConocimiento()), HttpStatus.OK);
+        } else
+            return new ResponseEntity<>(new SubAreasConocimiento(-1L, "Los datos enviados se encuentran inconpletos.", new AreaConocimiento()), HttpStatus.CONFLICT);
     }
 }
