@@ -16,32 +16,27 @@ public class AreaConocimientoController {
     @Autowired
     private AreaConocimientoServices areaConocimientoServices;
     private AreaConocimiento conocimientoRespuesta;
+
     @PostMapping
-    public ResponseEntity<AreaConocimiento> createAreaConocimiento(@RequestBody AreaConocimiento areaConocimiento){
-        if (areaConocimiento!=null){
-            conocimientoRespuesta=areaConocimientoServices.create(areaConocimiento);
-            if (conocimientoRespuesta.getIdArea()!=null)
-                return new ResponseEntity<>(conocimientoRespuesta, HttpStatus.OK);
-            else
-                return new ResponseEntity<>(new AreaConocimiento(-1L,areaConocimiento.getNombreArea()), HttpStatus.OK);
+    public ResponseEntity<AreaConocimiento> createAreaConocimiento(@RequestBody AreaConocimiento areaConocimiento) {
+        try {
+            if (areaConocimiento != null) {
+                areaConocimiento.setNombreArea(areaConocimiento.getNombreArea().trim());
+                conocimientoRespuesta = areaConocimientoServices.create(areaConocimiento);
+                if (conocimientoRespuesta.getIdArea() != null)
+                    return new ResponseEntity<>(conocimientoRespuesta, HttpStatus.OK);
+                else
+                    return new ResponseEntity<>(new AreaConocimiento(-1L, areaConocimiento.getNombreArea()), HttpStatus.OK);
+            } else
+                return new ResponseEntity<>(new AreaConocimiento(-1L, "Los datos enviados se encuentran inconpletos"), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new AreaConocimiento(-1L, "Ocurrio un error vuelva a intentarlo luego."), HttpStatus.CONFLICT);
         }
-        else
-            return new ResponseEntity<>(new AreaConocimiento(-1L,areaConocimiento.getNombreArea()), HttpStatus.CONFLICT);
+
     }
-    @PostMapping("/editar")
-    public ResponseEntity<AreaConocimiento> updateAreaConocimiento(@RequestBody AreaConocimiento areaConocimiento){
-        if (areaConocimiento!=null){
-            conocimientoRespuesta=areaConocimientoServices.update(areaConocimiento);
-            if (conocimientoRespuesta.getIdArea()!=null)
-                return new ResponseEntity<>(conocimientoRespuesta, HttpStatus.OK);
-            else
-                return new ResponseEntity<>(new AreaConocimiento(-1L,areaConocimiento.getNombreArea()), HttpStatus.OK);
-        }
-        else
-            return new ResponseEntity<>(new AreaConocimiento(-1L,areaConocimiento.getNombreArea()), HttpStatus.CONFLICT);
-    }
+
     @GetMapping
-    public ResponseEntity<List<AreaConocimiento>> listaAreaConocimiento(){
+    public ResponseEntity<List<AreaConocimiento>> listaAreaConocimiento() {
         return new ResponseEntity<>(areaConocimientoServices.findAll(), HttpStatus.OK);
     }
 }

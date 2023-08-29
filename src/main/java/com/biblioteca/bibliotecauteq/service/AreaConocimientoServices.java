@@ -6,6 +6,7 @@ import com.biblioteca.bibliotecauteq.repository.AreaConocimientoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ public class AreaConocimientoServices implements IAreaConocimiento {
     public AreaConocimiento create(AreaConocimiento areaConocimiento) {
         Optional<AreaConocimiento> existingArea = areaConocimientoRepository.findByNombreArea(areaConocimiento.getNombreArea());
         if (existingArea.isPresent()) {
-          return new AreaConocimiento();
+            return new AreaConocimiento();
         } else {
             try {
                 return areaConocimientoRepository.save(areaConocimiento);
@@ -27,24 +28,32 @@ public class AreaConocimientoServices implements IAreaConocimiento {
             }
         }
     }
+
     @Override
     public AreaConocimiento update(AreaConocimiento areaConocimiento) {
         try {
             return areaConocimientoRepository.save(areaConocimiento);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new AreaConocimiento();
         }
     }
 
     @Override
     public AreaConocimiento findById(Long idArea) {
-        Optional<AreaConocimiento> areaConocimiento=areaConocimientoRepository.findById(Math.toIntExact(idArea));
+        Optional<AreaConocimiento> areaConocimiento = areaConocimientoRepository.findById(Math.toIntExact(idArea));
         return areaConocimiento.orElse(null);
     }
+
     @Override
     public List<AreaConocimiento> findAll() {
-        return areaConocimientoRepository.findAll();
+        try {
+            return areaConocimientoRepository.findAll();
+
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
+
     @Override
     public void delete(Integer idArea) {
 
