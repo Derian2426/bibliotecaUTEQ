@@ -15,10 +15,14 @@ public class LibroServices implements ILibro {
     private LibroRepository libroRepository;
     @Override
     public Libro create(Libro libro) {
-        Libro busquedaLibro=libroRepository.findByNombreLibro(libro.getNombreLibro());
-        if(busquedaLibro!=null)
+        try {
+            Libro busquedaLibro=libroRepository.findByNombreLibro(libro.getNombreLibro());
+            if(busquedaLibro!=null)
+                return new Libro();
+            return libroRepository.save(libro);
+        }catch (Exception e){
             return new Libro();
-        return libroRepository.save(libro);
+        }
     }
 
     @Override

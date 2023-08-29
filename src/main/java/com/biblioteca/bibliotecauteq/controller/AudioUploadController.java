@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,14 +35,20 @@ public class AudioUploadController {
     private AutorLibroServices autorLibroServices;
     @Value("${upload.dir}")
     private String uploadDir;
-    private Libro libro= new Libro();
-    private final AreaConocimiento areaConocimiento = new AreaConocimiento();
-    private final SubAreasConocimiento subAreasConocimiento= new SubAreasConocimiento();
-    private final SubAreasEspecificas subAreasEspecificas= new SubAreasEspecificas();
+
     @PostMapping
-    public InformacionPeticion uploadAudio(@RequestParam("file") List<MultipartFile> files, @RequestParam("libroRequest") String libro) {
+    public InformacionPeticion uploadAudio(@RequestParam("file") List<MultipartFile> files, @RequestParam("libroRequest") String bookRequest) {
+        LibroRequest libroRequest = mapearLibro(bookRequest);
+        Path folder = Paths.get(uploadDir+"/"+ libroRequest.getLibro().getNombreLibro().trim());
         try {
-            LibroRequest libroRequest = mapearLibro(libro);
+            if(libroRequest.getLibro()==null)
+                return new InformacionPeticion(-1, "Debe enviar los datos del libro.", "Error");
+            if(libroRequest.getListTipoAutor().size()<1)
+                return new InformacionPeticion(-1, "Debe contener la lista de los autores.", "Error");
+            if(libroRequest.getCapituloFileList().size()<1)
+                return new InformacionPeticion(-1, "Debe contener la lista de los capitulos.", "Error");
+            if(files.size()<1)
+                return new InformacionPeticion(-1, "La lista de archivos no debe estar vacia.", "Error");
             if(libroServices.busquedaLibro(libroRequest.getLibro().getNombreLibro()))
                 return new InformacionPeticion(-1, "El libro ya se encuentra registrado.", "Error");
             if(!seleccionarArchivos(files,"pdf",libroRequest))
@@ -50,34 +57,63 @@ public class AudioUploadController {
                 return new InformacionPeticion(-1, "No se encuentra la portada del libro.", "Error");
             if (!verificarTipoArchivo(files))
                 return new InformacionPeticion(-1, "Solo se permiten archivos con extensión .mp3", "Archivo incorrecto");
-            Path carpeta = Paths.get(uploadDir+"/"+ libroRequest.getLibro().getNombreLibro().trim());
-            if (!crearCarpetaLibro(carpeta))
+            if (!crearCarpetaLibro(folder))
                 return new InformacionPeticion(-1, "La carpeta ya existe en el servidor", "Carpeta existente");
-            actualizarLibroRequest(files,carpeta, libroRequest);
-            this.libro=libroServices.create(libroRequest.getLibro());
-            if(this.libro==null)
+            actualizarLibroRequest(files,folder, libroRequest);
+            Libro book = libroServices.create(libroRequest.getLibro());
+            if(book ==null){
+                File deleteFolder = new File(folder.toUri());
+                deleteFolder(deleteFolder);
                 return new InformacionPeticion(-1, "El libro ya se encuentra registrado.", "Error");
-
-            //realizar validaciones
-            capituloService.createList(capitulosLibro(libroRequest.getCapituloFileList(),this.libro));
-            autorLibroServices.createList(autoresLibro(libroRequest.getListTipoAutor(),this.libro));
+            }
+            capituloService.createList(capitulosLibro(libroRequest.getCapituloFileList(), book));
+            autorLibroServices.createList(autoresLibro(libroRequest.getListTipoAutor(), book));
             return new InformacionPeticion(1, "Archivos de audio subidos con éxito.", "Éxito");
-        } catch (IOException e) {
+        } catch (Exception e) {
+            File deleteFolder = new File(folder.toUri());
+            deleteFolder(deleteFolder);
             return new InformacionPeticion(-1, "Error al subir los archivos de audio.", "Error");
         }
     }
-    private LibroRequest actualizarLibroRequest(List<MultipartFile> files,Path carpeta, LibroRequest libroRequest) throws IOException {
-        for (MultipartFile file : files) {
-            Path filePath = Path.of(carpeta.toString(), file.getOriginalFilename());
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            String ruta=removeExtensionFromFile(file);
-            int indice=posicionArchivo(libroRequest.getCapituloFileList(),ruta);
-            Capitulo capitulo=libroRequest.getCapituloFileList().get(indice);
-            capitulo.setNombreArchivo(file.getOriginalFilename());
-            capitulo.setRutaArchivo(libroRequest.getLibro().getNombreLibro());
-            libroRequest.getCapituloFileList().set(indice,capitulo);
+    private boolean deleteFolder(File carpeta) {
+        try {
+            if (carpeta.exists()) {
+                File[] files = carpeta.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        if (file.isDirectory()) {
+                            deleteFolder(file);
+                        } else {
+                            file.delete();
+                        }
+                    }
+                }
+                return carpeta.delete();
+            }
+            return false;
+        }catch (Exception e){
+            return false;
         }
-        return libroRequest;
+    }
+
+
+
+    private LibroRequest actualizarLibroRequest(List<MultipartFile> files,Path carpeta, LibroRequest libroRequest) {
+        try {
+            for (MultipartFile file : files) {
+                Path filePath = Path.of(carpeta.toString(), file.getOriginalFilename());
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                String ruta=removeExtensionFromFile(file);
+                int index=posicionArchivo(libroRequest.getCapituloFileList(),ruta);
+                Capitulo capitulo=libroRequest.getCapituloFileList().get(index);
+                capitulo.setNombreArchivo(file.getOriginalFilename());
+                capitulo.setRutaArchivo(libroRequest.getLibro().getNombreLibro());
+                libroRequest.getCapituloFileList().set(index,capitulo);
+            }
+            return libroRequest;
+        }catch (Exception e){
+            return new LibroRequest();
+        }
     }
     public String removeExtensionFromFile(MultipartFile file) {
         String ruta = file.getOriginalFilename();
