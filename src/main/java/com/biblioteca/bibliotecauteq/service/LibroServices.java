@@ -34,13 +34,25 @@ public class LibroServices implements ILibro {
 
     @Override
     public Optional<Libro> findById(Integer idLibro) {
-        return libroRepository.findById(idLibro);
+        try {
+            return libroRepository.findById(idLibro);
+        } catch (Exception e) {
+            return Optional.of(new Libro());
+        }
     }
 
     @Override
     public List<Libro> findAll() {
         try {
             return libroRepository.findAll();
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Libro> findLibro(String libroNombre) {
+        try {
+            return libroRepository.findByNombreLibroContainingIgnoreCase(libroNombre);
         } catch (Exception e) {
             return new ArrayList<>();
         }
