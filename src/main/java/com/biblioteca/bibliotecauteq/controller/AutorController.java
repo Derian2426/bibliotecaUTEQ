@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/autor")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class AutorController {
     @Autowired
     private AutorServices autorServices;

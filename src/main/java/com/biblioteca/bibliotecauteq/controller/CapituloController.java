@@ -8,17 +8,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/capitulo")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class CapituloController {
     @Autowired
     private CapituloService capituloService;
+
     @PostMapping
-    public ResponseEntity<List<Capitulo>> listaCapitulo(@RequestBody Libro libro){
-        return new ResponseEntity<>(capituloService.findByLibro(libro), HttpStatus.OK);
+    public ResponseEntity<List<Capitulo>> listaCapitulo(@RequestBody Libro libro) {
+        try {
+            if (libro != null)
+                return new ResponseEntity<>(capituloService.findByLibro(libro), HttpStatus.OK);
+            else
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.CONFLICT);
+        }
     }
 }

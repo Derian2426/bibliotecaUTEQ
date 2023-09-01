@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tipoAutor")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class TipoAutorController {
     @Autowired
     private TipoAutorServices tipoAutorServices;

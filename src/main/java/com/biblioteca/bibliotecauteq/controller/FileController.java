@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/files")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class FileController {
     @Value("${upload.dir}")
     private String uploadDir;

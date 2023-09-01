@@ -16,44 +16,51 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
-import java.util.Arrays;
 
 @Configuration
 @AllArgsConstructor
 public class WeSecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers(HttpMethod.POST,"/login").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/libro/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/libro").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/autoresLibro").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/capitulo").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/downloadZip").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/download").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/files").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/files/portada").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/usuarios").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/libro/autorizacion").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/login/validate").permitAll()
-                                .anyRequest().permitAll()
-
+                .addFilterBefore(corsFilter(), UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/libro/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/libro").authenticated()
+                        .requestMatchers("/autoresLibro").permitAll()
+                        .requestMatchers("/capitulo").permitAll()
+                        .requestMatchers("/downloadZip").permitAll()
+                        .requestMatchers("/download").permitAll()
+                        .requestMatchers("/files").permitAll()
+                        .requestMatchers("/files/portada").permitAll()
+                        .requestMatchers("/login/validate").permitAll()
+                        .requestMatchers("/autor").authenticated()
+                        .requestMatchers("/tipoAutor").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/autoresLibro").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/areaConocimiento").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/subAreaConocimiento/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/subAreaEspecificas/**").permitAll()
                 );
+
         httpSecurity.authenticationProvider(authenticationProvider());
         httpSecurity.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
+
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
+
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -61,21 +68,20 @@ public class WeSecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin(Arrays.asList("http://localhost:3000").toString());
-        configuration.addAllowedOriginPattern("/libro/autorizacion");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
+    public CorsFilter corsFilter() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+        source.registerCorsConfiguration("/**", corsConfiguration);
+
+        return new CorsFilter(source);
     }
-
-
 }

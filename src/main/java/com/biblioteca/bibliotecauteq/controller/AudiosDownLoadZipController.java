@@ -17,7 +17,7 @@ import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/downloadZip")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class AudiosDownLoadZipController {
 
     @Value("${upload.dir}")

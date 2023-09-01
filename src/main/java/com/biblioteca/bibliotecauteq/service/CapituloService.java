@@ -15,14 +15,16 @@ import java.util.Optional;
 public class CapituloService implements ICapitulo {
     @Autowired
     private CapituloRepository capituloRepository;
+
     @Override
     public Capitulo create(Capitulo capitulo) {
         return null;
     }
+
     public List<Capitulo> createList(List<Capitulo> capitulos) {
         try {
             return capituloRepository.saveAll(capitulos);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ArrayList<>();
         }
     }
@@ -46,8 +48,13 @@ public class CapituloService implements ICapitulo {
     public void delete(Integer idCapitulo) {
 
     }
+
     public List<Capitulo> findByLibro(Libro libro) {
-        Optional<List<Capitulo>> capitulo=capituloRepository.findByLibro(libro);
-        return capitulo.orElse(null);
+        try {
+            Optional<List<Capitulo>> capitulo = capituloRepository.findByLibro(libro);
+            return capitulo.orElse(null);
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/subAreaEspecificas")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class SubAreasEspecificasController {
     @Autowired
     private SubAreasEspecificasServices subAreasEspecificasServices;

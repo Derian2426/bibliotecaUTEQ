@@ -19,7 +19,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/upload")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class AudioUploadController {
     @Autowired
     private LibroServices libroServices;

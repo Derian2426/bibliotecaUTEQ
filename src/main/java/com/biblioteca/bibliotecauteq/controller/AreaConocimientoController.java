@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/areaConocimiento")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class AreaConocimientoController {
     @Autowired
     private AreaConocimientoServices areaConocimientoServices;

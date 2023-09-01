@@ -13,7 +13,7 @@ import java.nio.file.Files;
 
 @RestController
 @RequestMapping("/download")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class AudioDownLoadController {
     @Value("${upload.dir}")
     private String uploadDir;

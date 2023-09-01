@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/login")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
@@ -43,6 +43,5 @@ public class AuthController {
             return new InformacionPeticion(-1,"Token Invalido","Error");
         }
     }
-//solo mirame con esos ojitos lindos
 
 }
