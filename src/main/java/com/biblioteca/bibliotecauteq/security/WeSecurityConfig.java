@@ -45,6 +45,7 @@ public class WeSecurityConfig {
                         .requestMatchers("/login/validate").permitAll()
                         .requestMatchers("/autor").authenticated()
                         .requestMatchers("/tipoAutor").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/upload").authenticated()
                         .requestMatchers(HttpMethod.GET, "/autoresLibro").permitAll()
                         .requestMatchers(HttpMethod.GET, "/areaConocimiento").permitAll()
                         .requestMatchers(HttpMethod.GET, "/subAreaConocimiento/**").permitAll()
