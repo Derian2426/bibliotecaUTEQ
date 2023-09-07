@@ -31,7 +31,7 @@ public class Capitulo implements Serializable {
     private Date fechaCreacion;
     @ManyToOne
     @JoinColumn(name = "idUsuario")
-    @JsonIgnore
+    //@JsonIgnore
     private Usuario usuario;
     @ManyToOne
     @JoinColumn(name = "idLibro")

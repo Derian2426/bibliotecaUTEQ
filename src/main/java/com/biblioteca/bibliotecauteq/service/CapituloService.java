@@ -51,8 +51,12 @@ public class CapituloService implements ICapitulo {
 
     public List<Capitulo> findByLibro(Libro libro) {
         try {
-            Optional<List<Capitulo>> capitulo = capituloRepository.findByLibro(libro);
-            return capitulo.orElse(null);
+            return capituloRepository.findByLibro(libro).map(capitulos -> {
+                for (Capitulo capitulo : capitulos) {
+                    capitulo.getUsuario().setPassword("");
+                }
+                return capitulos;
+            }).orElse(new ArrayList<>());
         } catch (Exception e) {
             return new ArrayList<>();
         }
