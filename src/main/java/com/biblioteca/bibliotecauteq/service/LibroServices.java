@@ -57,8 +57,8 @@ public class LibroServices implements ILibro {
             if (libroBusqueda.getSubAreasEspecificas() != null && libroBusqueda.getSubAreasEspecificas().getSubAreasConocimiento() != null
                     && libroBusqueda.getSubAreasEspecificas().getSubAreasConocimiento().getAreaConocimiento() != null
             ) {
-                if (!Objects.equals(libroBusqueda.getCadenaBusqueda(), "")) {
-                    return libroRepository.findBySubAreasEspecificasAndNombreLibro(libroBusqueda.getSubAreasEspecificas(), libroBusqueda.getCadenaBusqueda());
+                if (!Objects.equals(libroBusqueda.getCadenaBusqueda(), null)) {
+                    return libroRepository.findBySubAreasEspecificasAndNombreLibroContainingIgnoreCase(libroBusqueda.getSubAreasEspecificas(), libroBusqueda.getCadenaBusqueda());
                 } else {
                     return libroRepository.findBySubAreasEspecificas(libroBusqueda.getSubAreasEspecificas());
                 }

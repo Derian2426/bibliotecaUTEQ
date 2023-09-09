@@ -10,6 +10,6 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
     Libro findByNombreLibro(String nombreLibro);
     List<Libro> findByNombreLibroContainingIgnoreCase(String nombreLibro);
     List<Libro> findBySubAreasEspecificas(SubAreasEspecificas subAreasEspecificas);
-    List<Libro> findBySubAreasEspecificasAndNombreLibro(SubAreasEspecificas subAreasEspecificas, String nombreLibro);
+    List<Libro> findBySubAreasEspecificasAndNombreLibroContainingIgnoreCase(SubAreasEspecificas subAreasEspecificas, String nombreLibro);
 
 }

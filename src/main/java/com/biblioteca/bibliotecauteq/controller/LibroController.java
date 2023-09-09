@@ -42,10 +42,8 @@ public class LibroController {
         try {
             if (busqueda == null)
                 return new ResponseEntity<>(libroServices.findAll(), HttpStatus.OK);
-            if (!busqueda.getCadenaBusqueda().equals("")){
+            else
                 return new ResponseEntity<>(libroServices.findLibro(busqueda), HttpStatus.OK);
-            }
-            return new ResponseEntity<>(libroServices.findAll(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(libroServices.findAll(), HttpStatus.OK);
         }
