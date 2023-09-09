@@ -1,6 +1,7 @@
 package com.biblioteca.bibliotecauteq.service;
 
 import com.biblioteca.bibliotecauteq.interfaces.ILibro;
+import com.biblioteca.bibliotecauteq.model.Busqueda;
 import com.biblioteca.bibliotecauteq.model.Libro;
 import com.biblioteca.bibliotecauteq.repository.LibroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -50,9 +52,19 @@ public class LibroServices implements ILibro {
         }
     }
 
-    public List<Libro> findLibro(String libroNombre) {
+    public List<Libro> findLibro(Busqueda libroBusqueda) {
         try {
-            return libroRepository.findByNombreLibroContainingIgnoreCase(libroNombre);
+            if (libroBusqueda.getSubAreasEspecificas() != null && libroBusqueda.getSubAreasEspecificas().getSubAreasConocimiento() != null
+                    && libroBusqueda.getSubAreasEspecificas().getSubAreasConocimiento().getAreaConocimiento() != null
+            ) {
+                if (!Objects.equals(libroBusqueda.getCadenaBusqueda(), "")) {
+                    return libroRepository.findBySubAreasEspecificasAndNombreLibro(libroBusqueda.getSubAreasEspecificas(), libroBusqueda.getCadenaBusqueda());
+                } else {
+                    return libroRepository.findBySubAreasEspecificas(libroBusqueda.getSubAreasEspecificas());
+                }
+            } else {
+                return libroRepository.findByNombreLibroContainingIgnoreCase(libroBusqueda.getCadenaBusqueda());
+            }
         } catch (Exception e) {
             return new ArrayList<>();
         }

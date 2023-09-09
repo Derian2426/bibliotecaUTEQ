@@ -13,5 +13,6 @@ public class Busqueda {
     private String cadenaBusqueda;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date fechaPublicacion;
+    private SubAreasEspecificas subAreasEspecificas;
 
 }
