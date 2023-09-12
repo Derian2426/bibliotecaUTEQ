@@ -24,11 +24,28 @@ public class FileController {
             Path carpeta = Paths.get(uploadDir+"/"+ capitulo.getRutaArchivo()+"/"+capitulo.getNombreArchivo());
             File file = new File(carpeta.toString());
             Resource resource = new FileSystemResource(file);
-            //
             if (!resource.exists() || !resource.isReadable()) {
                 return ResponseEntity.notFound().build();
             }
             String contentType = "audio/mpeg";
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, contentType)
+                    .body(resource);
+
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PostMapping("/pdf")
+    public ResponseEntity<Resource> serveFilePDF(@RequestBody Libro libro) {
+        try {
+            Path carpeta = Paths.get(uploadDir+"/pdf/"+libro.getPdfLibro());
+            File file = new File(carpeta.toString());
+            Resource resource = new FileSystemResource(file);
+            if (!resource.exists() || !resource.isReadable()) {
+                return ResponseEntity.notFound().build();
+            }
+            String contentType = "application/pdf";
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, contentType)
                     .body(resource);
