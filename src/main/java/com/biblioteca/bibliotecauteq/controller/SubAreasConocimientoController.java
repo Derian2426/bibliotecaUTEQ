@@ -40,7 +40,7 @@ public class SubAreasConocimientoController {
                 if (conocimientoRespuesta.getIdSubArea() != null)
                     return new ResponseEntity<>(conocimientoRespuesta, HttpStatus.OK);
                 else
-                    return new ResponseEntity<>(new SubAreasConocimiento(-1L, subAreasConocimiento.getNombreSubArea(), new AreaConocimiento()), HttpStatus.CONFLICT);
+                    return new ResponseEntity<>(new SubAreasConocimiento(-1L, subAreasConocimiento.getNombreSubArea(), new AreaConocimiento()), HttpStatus.OK);
             } else
                 return new ResponseEntity<>(new SubAreasConocimiento(-1L, "Los datos enviados se encuentran inconpletos.", new AreaConocimiento()), HttpStatus.CONFLICT);
         } catch (Exception e) {

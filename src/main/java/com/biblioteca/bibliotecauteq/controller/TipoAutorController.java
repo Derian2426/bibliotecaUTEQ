@@ -33,11 +33,11 @@ public class TipoAutorController {
             if (tipoAutor != null) {
                 TipoAutor autor = tipoAutorServices.create(tipoAutor);
                 if (autor.getIdAutor() == null)
-                    return new ResponseEntity<>(new TipoAutor(-1, tipoAutor.getTipoAutor()), HttpStatus.CONFLICT);
+                    return new ResponseEntity<>(new TipoAutor(-1, tipoAutor.getTipoAutor()), HttpStatus.OK);
                 else
                     return new ResponseEntity<>(autor, HttpStatus.OK);
             } else
-                return new ResponseEntity<>(new TipoAutor(), HttpStatus.CONFLICT);
+                return new ResponseEntity<>(new TipoAutor(-1,"Datos faltantes, tipo de autor."), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new TipoAutor(), HttpStatus.CONFLICT);
         }

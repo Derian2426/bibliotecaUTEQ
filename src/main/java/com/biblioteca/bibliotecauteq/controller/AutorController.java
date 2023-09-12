@@ -29,11 +29,11 @@ public class AutorController {
             if (autor != null) {
                 Autor autorVerificacion = autorServices.create(autor);
                 if (autorVerificacion.getIdAutor() == null)
-                    return new ResponseEntity<>(new Autor(-1, autor.getNombre(), autor.getApellido()), HttpStatus.CONFLICT);
+                    return new ResponseEntity<>(new Autor(-1, autor.getNombre(), autor.getApellido()), HttpStatus.OK);
                 else
                     return new ResponseEntity<>(autorVerificacion, HttpStatus.OK);
             } else
-                return new ResponseEntity<>(new Autor(), HttpStatus.CONFLICT);
+                return new ResponseEntity<>(new Autor(-1,"No se encontro un nombre.","No se encontro un apellido."), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(new Autor(), HttpStatus.CONFLICT);

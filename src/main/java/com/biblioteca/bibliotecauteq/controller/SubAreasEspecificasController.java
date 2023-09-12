@@ -45,10 +45,10 @@ public class SubAreasEspecificasController {
                     return new ResponseEntity<>(areasEspecificas, HttpStatus.OK);
                 else
                     return new ResponseEntity<>(new SubAreasEspecificas(-1L, subAreasEspecificas.getNombreSubAreaEspecifica(),
-                            new SubAreasConocimiento()), HttpStatus.CONFLICT);
+                            new SubAreasConocimiento()), HttpStatus.OK);
             } else
                 return new ResponseEntity<>(new SubAreasEspecificas(-1L, "Los datos enviados se encuentran inconpletos.",
-                        new SubAreasConocimiento()), HttpStatus.CONFLICT);
+                        new SubAreasConocimiento()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new SubAreasEspecificas(-1L, "Ocurrio un error.",
                     new SubAreasConocimiento()), HttpStatus.CONFLICT);
