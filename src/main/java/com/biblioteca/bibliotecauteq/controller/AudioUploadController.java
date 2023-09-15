@@ -32,6 +32,8 @@ public class AudioUploadController {
     @Autowired
     private CapituloService capituloService;
     @Autowired
+    private UsuarioService usuarioService;
+    @Autowired
     private AutorLibroServices autorLibroServices;
     @Value("${upload.dir}")
     private String uploadDir;
@@ -47,6 +49,8 @@ public class AudioUploadController {
                 return new InformacionPeticion(-1, "Debe contener la lista de los autores.", "Error");
             if(libroRequest.getCapituloFileList().size()<1)
                 return new InformacionPeticion(-1, "Debe contener la lista de los capitulos.", "Error");
+            if(usuarioService.findById(libroRequest.getCapituloFileList().get(0).getUsuario().getIdUsuario())==null)
+                return new InformacionPeticion(-1, "El usuario de la sesion no es valido.", "Error");
             if(files.size()<1)
                 return new InformacionPeticion(-1, "La lista de archivos no debe estar vacia.", "Error");
             if(libroServices.busquedaLibro(libroRequest.getLibro().getNombreLibro()))
