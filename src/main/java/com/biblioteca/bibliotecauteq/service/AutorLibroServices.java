@@ -34,8 +34,8 @@ public class AutorLibroServices implements IAutorLibro {
     }
 
     @Override
-    public void delete(Integer idAutorLibro) {
-
+    public void delete(List<AutorLibro> autorLibros) {
+        autorLibroRepository.deleteAll(autorLibros);
     }
     public List<AutorLibro> createList(List<AutorLibro> autoesLibro) {
         try {

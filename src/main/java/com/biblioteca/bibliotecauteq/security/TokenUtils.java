@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class TokenUtils {
     private final static String AccesTokenSecret="jbjbsvzbdk346vx345czjxcbvkjbcjsd57d78gdbFESHtyf67yuTyrdGC";
-    private final static Long AccesTokenValiditySecons=600L;
+    private final static Long AccesTokenValiditySecons=2700L;
     public static String createToken(String nombre, String email){
         Long expiracionTime=AccesTokenValiditySecons*1000;
         Date expirationDate= new Date(System.currentTimeMillis()+expiracionTime);

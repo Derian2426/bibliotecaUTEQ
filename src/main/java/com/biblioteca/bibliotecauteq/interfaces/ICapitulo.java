@@ -9,5 +9,5 @@ public interface ICapitulo {
     Capitulo update(Capitulo capitulo);
     Capitulo findById(Capitulo capitulo);
     List<Capitulo> findAll();
-    void delete(Integer idCapitulo);
+    void delete(List<Capitulo> capitulos);
 }

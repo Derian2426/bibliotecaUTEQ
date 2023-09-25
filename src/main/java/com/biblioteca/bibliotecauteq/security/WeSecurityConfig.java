@@ -35,18 +35,20 @@ public class WeSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/login/validate").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/areaConocimiento").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/areaConocimiento").authenticated()
                         .requestMatchers(HttpMethod.GET, "/areaConocimiento").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/subAreaConocimiento").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/subAreaConocimiento").authenticated()
                         .requestMatchers(HttpMethod.GET, "/subAreaConocimiento/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/subAreaEspecificas").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/subAreaEspecificas").authenticated()
                         .requestMatchers(HttpMethod.GET, "/subAreaEspecificas/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/upload").authenticated()
-                        .requestMatchers(HttpMethod.GET,"/libro/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/libro").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/libro").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/upload").authenticated()
+                        .requestMatchers("/usuarios").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/libro/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/libro").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/libro").permitAll()
                         .requestMatchers("/autoresLibro").permitAll()
                         .requestMatchers("/capitulo").permitAll()
+                        .requestMatchers("/capitulo/eliminarLibro").authenticated()
                         .requestMatchers("/downloadZip").permitAll()
                         .requestMatchers("/download").permitAll()
                         .requestMatchers("/files").permitAll()
@@ -78,6 +80,7 @@ public class WeSecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();

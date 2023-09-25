@@ -16,6 +16,8 @@ public class Libro {
     private Long idLibro;
     @Column(name = "nombreLibro", nullable = false, length = 300)
     private String nombreLibro;
+    @Column(name = "carpetaLibro", length = 300)
+    private String carpetaLibro;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name = "fechaPublicacion")
     private Date fechaPublicacion;

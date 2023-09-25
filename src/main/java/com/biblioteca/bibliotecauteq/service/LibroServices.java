@@ -72,7 +72,7 @@ public class LibroServices implements ILibro {
 
     @Override
     public void delete(Integer idLibro) {
-
+        libroRepository.deleteById(idLibro);
     }
 
     public Boolean busquedaLibro(String nombreLibro) {

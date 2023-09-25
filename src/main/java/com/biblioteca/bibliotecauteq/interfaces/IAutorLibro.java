@@ -9,5 +9,5 @@ public interface IAutorLibro {
     AutorLibro update(AutorLibro autorLibro);
     AutorLibro findById(Integer idAutorLibro);
     List<AutorLibro> findAll();
-    void delete(Integer idAutorLibro);
+    void delete(List<AutorLibro>autores);
 }

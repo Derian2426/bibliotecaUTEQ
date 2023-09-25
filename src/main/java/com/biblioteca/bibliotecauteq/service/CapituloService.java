@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CapituloService implements ICapitulo {
@@ -45,8 +44,8 @@ public class CapituloService implements ICapitulo {
     }
 
     @Override
-    public void delete(Integer idCapitulo) {
-
+    public void delete(List<Capitulo> capitulos) {
+        capituloRepository.deleteAll(capitulos);
     }
 
     public List<Capitulo> findByLibro(Libro libro) {
@@ -57,6 +56,14 @@ public class CapituloService implements ICapitulo {
                 }
                 return capitulos;
             }).orElse(new ArrayList<>());
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Capitulo> findByLibroAll(Libro libro) {
+        try {
+            return capituloRepository.findByLibro(libro).orElse(new ArrayList<>());
         } catch (Exception e) {
             return new ArrayList<>();
         }
