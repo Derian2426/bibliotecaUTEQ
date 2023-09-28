@@ -48,6 +48,10 @@ public class CapituloService implements ICapitulo {
         capituloRepository.deleteAll(capitulos);
     }
 
+    public void deleteCapitulo(Capitulo capitulos) {
+        capituloRepository.delete(capitulos);
+    }
+
     public List<Capitulo> findByLibro(Libro libro) {
         try {
             return capituloRepository.findByLibro(libro).map(capitulos -> {

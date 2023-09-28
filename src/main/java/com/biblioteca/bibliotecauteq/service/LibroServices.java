@@ -31,7 +31,7 @@ public class LibroServices implements ILibro {
 
     @Override
     public Libro update(Libro libro) {
-        return null;
+        return libroRepository.save(libro);
     }
 
     @Override
