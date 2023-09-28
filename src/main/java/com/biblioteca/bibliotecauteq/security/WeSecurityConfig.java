@@ -54,6 +54,7 @@ public class WeSecurityConfig {
                         .requestMatchers("/files").permitAll()
                         .requestMatchers("/files/portada").permitAll()
                         .requestMatchers("/files/pdf").permitAll()
+                        .requestMatchers("/api/libro").permitAll()
                         .requestMatchers("/autor").authenticated()
                         .requestMatchers("/tipoAutor").authenticated()
                 );
