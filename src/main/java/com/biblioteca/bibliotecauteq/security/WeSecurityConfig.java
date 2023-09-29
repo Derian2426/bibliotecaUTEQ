@@ -19,7 +19,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-
 @Configuration
 @AllArgsConstructor
 public class WeSecurityConfig {
@@ -54,11 +53,10 @@ public class WeSecurityConfig {
                         .requestMatchers("/files").permitAll()
                         .requestMatchers("/files/portada").permitAll()
                         .requestMatchers("/files/pdf").permitAll()
-                        .requestMatchers("/api/libro").permitAll()
+                        .requestMatchers("/api/libro").authenticated()
                         .requestMatchers("/autor").authenticated()
                         .requestMatchers("/tipoAutor").authenticated()
                 );
-
         httpSecurity.authenticationProvider(authenticationProvider());
         httpSecurity.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
