@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class AutorLibroServices implements IAutorLibro {
     @Autowired
     private AutorLibroRepository autorLibroRepository;
+
     @Override
     public AutorLibro create(AutorLibro autorLibro) {
         return autorLibroRepository.save(autorLibro);
@@ -37,17 +39,23 @@ public class AutorLibroServices implements IAutorLibro {
     public void delete(List<AutorLibro> autorLibros) {
         autorLibroRepository.deleteAll(autorLibros);
     }
+
+    public void deleteAutor(AutorLibro autorLibro) {
+        autorLibroRepository.delete(autorLibro);
+    }
+
     public List<AutorLibro> createList(List<AutorLibro> autoesLibro) {
         try {
             return autorLibroRepository.saveAll(autoesLibro);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ArrayList<>();
         }
     }
+
     public List<AutorLibro> listaAutores(Libro libro) {
         try {
             return autorLibroRepository.findByLibro(libro);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ArrayList<>();
         }
     }

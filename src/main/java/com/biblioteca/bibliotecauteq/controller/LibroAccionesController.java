@@ -30,6 +30,8 @@ public class LibroAccionesController {
     private CapituloService capituloService;
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private AutorLibroServices autorLibroServices;
     @Value("${upload.dir}")
     private String uploadDir;
 
@@ -45,6 +47,7 @@ public class LibroAccionesController {
                 Libro bookEdit = bookMap.getLibro();
                 List<Capitulo> capitulosEdit = bookMap.getCapituloFileList();
                 List<Capitulo> capitulos = capituloService.findByLibroAll(book);
+                List<AutorLibro> autorLibros = autorLibroServices.listaAutores(book);
                 String rutaAbsoluta = capitulos.get(0).getRutaArchivo();
                 Usuario usuario = usuarioService.findByEmail(capitulos.get(0).getUsuario().getEmail());
                 ActualizarImagenPdf(book, bookEdit, files);
@@ -53,6 +56,7 @@ public class LibroAccionesController {
                 actualizarAudios(files, uploadDir + "/" + rutaAbsoluta.trim());
                 actualizarCapitulos(capitulosEdit, bookEdit, rutaAbsoluta.trim(), usuario);
                 capituloService.createList(capitulosEdit);
+                autorLibroServices.createList(autoresLibro(bookMap.getListTipoAutor(), autorLibros, bookEdit));
                 return new InformacionPeticion(1, "Archivos de audio modificados con éxito.", "Éxito");
             } else {
                 return new InformacionPeticion(-1, "Error al subir los archivos de audio.", "Error");
@@ -132,5 +136,27 @@ public class LibroAccionesController {
             capitulo.setLibro(bookEdit);
             capitulo.setUsuario(usuario);
         }
+    }
+
+    private List<AutorLibro> autoresLibro(List<AutorLibro> listaAutoresEdit, List<AutorLibro> listaAutores, Libro libro) {
+        for (AutorLibro autorLibro : listaAutores) {
+            if(!verificaAutor( listaAutoresEdit, autorLibro)){
+                autorLibroServices.deleteAutor(autorLibro);
+            }
+        }
+        for (AutorLibro autorLibro : listaAutoresEdit) {
+            autorLibro.setLibro(libro);
+        }
+        return listaAutoresEdit;
+    }
+
+    private boolean verificaAutor(List<AutorLibro> listaAutoresEdit, AutorLibro autorLibroBusqueda) {
+        for (AutorLibro autorLibro : listaAutoresEdit) {
+            if (autorLibroBusqueda.getAutor().getNombre().equals(autorLibro.getAutor().getNombre()) &&
+                    autorLibroBusqueda.getAutor().getApellido().equals(autorLibro.getAutor().getApellido())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
