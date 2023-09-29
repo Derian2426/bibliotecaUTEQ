@@ -54,7 +54,7 @@ public class CapituloService implements ICapitulo {
 
     public List<Capitulo> findByLibro(Libro libro) {
         try {
-            return capituloRepository.findByLibro(libro).map(capitulos -> {
+            return capituloRepository.findByLibroOrderByOrdenArchivo(libro).map(capitulos -> {
                 for (Capitulo capitulo : capitulos) {
                     capitulo.getUsuario().setPassword("");
                 }
@@ -67,7 +67,7 @@ public class CapituloService implements ICapitulo {
 
     public List<Capitulo> findByLibroAll(Libro libro) {
         try {
-            return capituloRepository.findByLibro(libro).orElse(new ArrayList<>());
+            return capituloRepository.findByLibroOrderByOrdenArchivo(libro).orElse(new ArrayList<>());
         } catch (Exception e) {
             return new ArrayList<>();
         }

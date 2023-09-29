@@ -8,5 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CapituloRepository extends JpaRepository<Capitulo, Integer> {
-    Optional<List<Capitulo>> findByLibro(Libro libro);
+    Optional<List<Capitulo>> findByLibroOrderByOrdenArchivo(Libro libro);
 }

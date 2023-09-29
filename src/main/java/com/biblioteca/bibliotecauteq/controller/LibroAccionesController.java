@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.biblioteca.bibliotecauteq.file_configuration.Archivos.eliminarArchivo;
@@ -115,8 +116,10 @@ public class LibroAccionesController {
     private void actualizarAudios(List<MultipartFile> files, String ruta) {
         try {
             for (MultipartFile file : files) {
-                Path filePath = Path.of(ruta, file.getOriginalFilename());
-                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                if (!Objects.equals(file.getOriginalFilename(), "")) {
+                    Path filePath = Path.of(ruta, file.getOriginalFilename());
+                    Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

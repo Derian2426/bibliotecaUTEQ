@@ -21,7 +21,7 @@ public class FileController {
     @PostMapping
     public ResponseEntity<Resource> serveFileAudio(@RequestBody Capitulo capitulo) {
         try {
-            Path carpeta = Paths.get(uploadDir+"/"+ capitulo.getRutaArchivo()+"/"+capitulo.getNombreArchivo());
+            Path carpeta = Paths.get(uploadDir+"/"+ capitulo.getRutaArchivo().trim()+"/"+capitulo.getNombreArchivo());
             File file = new File(carpeta.toString());
             Resource resource = new FileSystemResource(file);
             if (!resource.exists() || !resource.isReadable()) {
