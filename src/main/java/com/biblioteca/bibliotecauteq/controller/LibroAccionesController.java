@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -49,6 +50,7 @@ public class LibroAccionesController {
                 List<Capitulo> capitulos = capituloService.findByLibroAll(book);
                 List<AutorLibro> autorLibros = autorLibroServices.listaAutores(book);
                 String rutaAbsoluta = capitulos.get(0).getRutaArchivo();
+                bookEdit.setCarpetaLibro(rutaAbsoluta);
                 Usuario usuario = usuarioService.findByEmail(capitulos.get(0).getUsuario().getEmail());
                 ActualizarImagenPdf(book, bookEdit, files);
                 bookEdit = libroServices.update(bookEdit);
@@ -69,35 +71,74 @@ public class LibroAccionesController {
     private void ActualizarImagenPdf(Libro book, Libro bookEdit, List<MultipartFile> files) {
         if (!book.getPdfLibro().equals(bookEdit.getPdfLibro())) {
             eliminarArchivo(uploadDir + "/pdf/" + book.getPdfLibro());
-            bookEdit.setPdfLibro(String.valueOf(crearArchivos(files, "application/pdf", uploadDir + "/pdf/")));
+            bookEdit.setPdfLibro(String.valueOf(crearArchivos(obtenerArchivos(files, ".pdf",true), "pdf")));
+        } else {
+            eliminarArchivoPorExtension("pdf", files);
         }
         if (!book.getCoverImage().equals(bookEdit.getCoverImage())) {
             if (eliminarArchivo(uploadDir + "/png/" + book.getCoverImage()) || book.getCoverImage().endsWith(".png")) {
-                bookEdit.setCoverImage(crearArchivos(files, "image/png", uploadDir + "/png/"));
-
+                if (obtenerArchivos(files, ".png", false) == null) {
+                    bookEdit.setCoverImage(crearArchivos(obtenerArchivos(files, ".jpg", true), "jpg"));
+                } else {
+                    bookEdit.setCoverImage(crearArchivos(obtenerArchivos(files, ".png", true), "png"));
+                }
             } else if (eliminarArchivo(uploadDir + "/jpg/" + book.getCoverImage()) || book.getCoverImage().endsWith(".jpg")) {
-                bookEdit.setCoverImage(crearArchivos(files, "image/png", uploadDir + "/png/"));
+                if (obtenerArchivos(files, ".jpg", false) == null) {
+                    bookEdit.setCoverImage(crearArchivos(obtenerArchivos(files, ".png", true), "png"));
+
+                }else{
+                    bookEdit.setCoverImage(crearArchivos(obtenerArchivos(files, ".jpg",true), "jpg"));
+                }
+            }
+        } else {
+            eliminarArchivoPorExtension("jpg", files);
+            eliminarArchivoPorExtension("png", files);
+        }
+    }
+
+    private void eliminarArchivoPorExtension(String extension, List<MultipartFile> files) {
+        Iterator<MultipartFile> iterator = files.iterator();
+
+        while (iterator.hasNext()) {
+            MultipartFile file = iterator.next();
+            String originalFilename = file.getOriginalFilename();
+
+            if (originalFilename != null && originalFilename.endsWith("." + extension)) {
+                iterator.remove();
+                System.out.println("Archivo eliminado de la lista: " + originalFilename);
             }
         }
     }
 
-    private String crearArchivos(List<MultipartFile> files, String extension, String direccion) {
-        Optional<String> result = files.stream()
-                .filter(file -> file.getContentType() != null && file.getContentType().equals(extension))
-                .findFirst()
-                .map(file -> {
-                    try {
-                        Path filePath = Paths.get(direccion, file.getOriginalFilename());
-                        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                        files.remove(file);
-                        return file.getOriginalFilename();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                });
-        return result.orElse(null);
+    //enviar con el punto
+    private MultipartFile obtenerArchivos(List<MultipartFile> files, String extencion, boolean eliminar) {
+        MultipartFile fileSave = null;
+        for (MultipartFile file : files) {
+            if (file.getOriginalFilename().endsWith(extencion) && !file.getOriginalFilename().equals("")) {
+                fileSave = file;
+                break;
+            }
+        }
+        if (fileSave != null && eliminar) {
+            files.remove(fileSave);
+        }
+        return fileSave;
     }
+
+    private String crearArchivos(MultipartFile file, String extencion) {
+        try {
+            if (!Objects.equals(file.getOriginalFilename(), "")) {
+                Path filePath = Paths.get(uploadDir + "/" + extencion + "/", file.getOriginalFilename());
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                return file.getOriginalFilename();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+
 
     private void eliminarArchivosAudio(List<Capitulo> capitulos, List<Capitulo> capitulosEdit, String ruta) {
         for (Capitulo capitulo : capitulos) {
@@ -140,7 +181,7 @@ public class LibroAccionesController {
 
     private List<AutorLibro> autoresLibro(List<AutorLibro> listaAutoresEdit, List<AutorLibro> listaAutores, Libro libro) {
         for (AutorLibro autorLibro : listaAutores) {
-            if(!verificaAutor( listaAutoresEdit, autorLibro)){
+            if (!verificaAutor(listaAutoresEdit, autorLibro)) {
                 autorLibroServices.deleteAutor(autorLibro);
             }
         }

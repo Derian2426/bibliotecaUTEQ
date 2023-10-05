@@ -37,13 +37,8 @@ public class Archivos {
 
     public static boolean eliminarArchivo(String rutaArchivo) {
         File archivo = new File(rutaArchivo);
-
         if (archivo.exists()) {
-            if (archivo.delete()) {
-                return true;
-            } else {
-                return false;
-            }
+            return archivo.delete();
         } else {
             return false;
         }

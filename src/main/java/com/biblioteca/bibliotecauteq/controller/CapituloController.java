@@ -53,7 +53,7 @@ public class CapituloController {
                 eliminarCarpeta(uploadDir + "/" + libro.getCarpetaLibro());
                 eliminarArchivo(uploadDir + "/pdf/" + libro.getPdfLibro());
                 eliminarArchivo(uploadDir + "/png/" + libro.getCoverImage());
-                eliminarArchivo(uploadDir + "/jpg/" + libro.getCoverImage());
+                eliminarArchivo(uploadDir + "/jpg.png/" + libro.getCoverImage());
                 return new ResponseEntity<>(libro, HttpStatus.OK);
             } else
                 return new ResponseEntity<>(new Libro(), HttpStatus.OK);
