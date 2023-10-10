@@ -71,7 +71,7 @@ public class LibroAccionesController {
     private void ActualizarImagenPdf(Libro book, Libro bookEdit, List<MultipartFile> files) {
         if (!book.getPdfLibro().equals(bookEdit.getPdfLibro())) {
             eliminarArchivo(uploadDir + "/pdf/" + book.getPdfLibro());
-            bookEdit.setPdfLibro(String.valueOf(crearArchivos(obtenerArchivos(files, ".pdf",true), "pdf")));
+            bookEdit.setPdfLibro(String.valueOf(crearArchivos(obtenerArchivos(files, ".pdf", true), "pdf")));
         } else {
             eliminarArchivoPorExtension("pdf", files);
         }
@@ -86,8 +86,8 @@ public class LibroAccionesController {
                 if (obtenerArchivos(files, ".jpg", false) == null) {
                     bookEdit.setCoverImage(crearArchivos(obtenerArchivos(files, ".png", true), "png"));
 
-                }else{
-                    bookEdit.setCoverImage(crearArchivos(obtenerArchivos(files, ".jpg",true), "jpg"));
+                } else {
+                    bookEdit.setCoverImage(crearArchivos(obtenerArchivos(files, ".jpg", true), "jpg"));
                 }
             }
         } else {
@@ -161,7 +161,7 @@ public class LibroAccionesController {
     private void actualizarAudios(List<MultipartFile> files, String ruta) {
         try {
             for (MultipartFile file : files) {
-                if (!Objects.equals(file.getOriginalFilename(), "")) {
+                if (!Objects.equals(file.getOriginalFilename(), "") && file.getSize() > 0) {
                     Path filePath = Path.of(ruta, file.getOriginalFilename());
                     Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
                 }
