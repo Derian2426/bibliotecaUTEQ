@@ -48,4 +48,15 @@ public class LibroController {
             return new ResponseEntity<>(libroServices.findAll(), HttpStatus.OK);
         }
     }
+    @PostMapping("/editar")
+    public ResponseEntity<Libro> libroEdit(@RequestBody Libro libro) {
+        try {
+            if (libro == null)
+                return new ResponseEntity<>(new Libro() , HttpStatus.NOT_MODIFIED);
+            else
+                return new ResponseEntity<>(libroServices.update(libro), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new Libro() , HttpStatus.NOT_MODIFIED);
+        }
+    }
 }
